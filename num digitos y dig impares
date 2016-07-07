@@ -1,0 +1,41 @@
+#include <iostream>
+#include <conio.h>
+using namespace std;
+int numdig(int x);
+int numimpar(int x);
+void main()
+{
+	int a, dig, r;
+	cout<<"Introduzca un numero entero, sera usado como dividendo"<<endl;
+	cin>> a;
+	dig= numdig(a);
+	cout<<"sus digitos son:"<<dig<<endl;
+	r= numimpar(a);
+	cout<<r;
+	getch();
+}
+int numdig(int x)
+{
+	int i=0;
+	while(x>0)
+	{
+		x=x/10;
+		i=i+1;
+	}
+	return(i);
+}
+int numimpar(int x)
+{
+	int d, i=0;
+	while (x>0)
+	{
+		d=x%10;
+		x=x/10;
+		d=d%2;
+		if(d!=0)
+		{
+			i=i+1;
+		}
+	}
+	return(i);
+}
