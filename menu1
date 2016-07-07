@@ -1,0 +1,80 @@
+#include <iostream>
+#include <conio.h>
+#include "stdlib.h"
+using namespace std;
+int numdig(int x);
+int numimpar(int x);
+void main()
+{
+	int a, dig, r, op;
+	do{
+	cout<<"			----------MENU----------"<<endl;
+	cout<<"			1. Contar digitos"<<endl;
+	cout<<"			2. Contar digitos impares"<<endl;
+	cout<<"			0. SALIR"<<endl;
+	cout<<endl;
+	cout<<"Introduzca la opcion deseada"<<endl;
+	cin>>op;
+	switch(op)
+	{
+	case 1:
+		{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			dig= numdig(a);
+			cout<<"su numero de digitos son:"<<dig<<endl;
+			getch();
+			system("cls");
+			break;
+		}
+	case 2:
+		{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			r= numimpar(a);
+			cout<<"su cantidad de digitos impares son:"<<r<<endl;
+			getch();
+			system("cls");
+			break;
+		}
+	case 0:
+		{
+			cout<<"SALIENDO...";
+			break;
+		}
+	default:
+		{
+			cout<<"opcion incorrecta";
+			getch();
+			system("cls");
+			break;
+		}
+	}
+	}while(op!=0);
+	getch();
+}
+int numdig(int x)
+{
+	int i=0;
+	while(x>0)
+	{
+		x=x/10;
+		i=i+1;
+	}
+	return(i);
+}
+int numimpar(int x)
+{
+	int d, i=0;
+	while (x>0)
+	{
+		d=x%10;
+		x=x/10;
+		d=d%2;
+		if(d!=0)
+		{
+			i=i+1;
+		}
+	}
+	return(i);
+}
