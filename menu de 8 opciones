@@ -1,11 +1,12 @@
 #include <iostream>
 #include <conio.h>
 #include "stdlib.h"
+#include "math.h"
 using namespace std;
 int numdig(int x);
 int numimpar(int x);
 int sumdig(int x);
-void invertir(int x);
+int invertir(int x);
 bool primo(int x);
 int elimpar(int x);
 bool verifOrden(int x);
@@ -65,7 +66,8 @@ void main()
 		{
 			cout<<"Introduzca un numero entero cuyos digitos desee invertir"<<endl;
 			cin>> a;
-			invertir(a);
+			r=invertir(a);
+			cout<<"el numero invertido es: "<<r<<endl;
 			getch();
 			system("cls");
 			break;
@@ -172,16 +174,23 @@ int sumdig(int x)
 	}
 	return (s);
 }
-void invertir(int x)
+int invertir(int x)
 {
-	int d;
-	cout<<"el numero invertido es: "<<endl;
+	int d, s=0, l, m=1;
+	l=numdig(x);
+	while((l-1)>0)
+	{
+		m=m*10;
+		l=l-1;
+	}
 	while(x>0)
 	{
 		d=x%10;
+		s=s+d*m;
+		m=m/10;
 		x=x/10;
-		cout<<d;
 	}
+	return (s);
 }
 bool primo(int x)
 {
