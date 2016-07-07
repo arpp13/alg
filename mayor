@@ -1,0 +1,26 @@
+#include <iostream>
+#include <conio.h>
+using namespace std;
+void main()
+{
+	int a, b;
+	cout<<"Introduzca 2 numeros enteros:"<<endl;
+	cin>> a;
+	cin>>b;
+	if(a>b)
+	{
+		cout<<"el mayor es: "<<a;
+	}
+	else
+	{
+		if(a==b)
+		{
+			cout<<"los numeros son iguales";
+		}
+		else
+		{
+			cout<<"el mayor es: "<<b;
+		}
+	}
+	getch();
+}
