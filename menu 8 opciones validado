@@ -1,0 +1,273 @@
+#include <iostream>
+#include <conio.h>
+#include "stdlib.h"
+using namespace std;
+int numdig(int x);
+int numimpar(int x);
+int sumdig(int x);
+int invertir(int x);
+bool primo(int x);
+int elimpar(int x);
+bool verifOrden(int x);
+int concatenar(int x, int y);
+
+void main()
+{
+	int a, r, op, b;
+	do{
+	cout<<"			----------MENU----------"<<endl;
+	cout<<"			1. Contar digitos"<<endl;
+	cout<<"			2. Contar digitos impares"<<endl;
+	cout<<"			3. Sumar digitos de un numero"<<endl;
+	cout<<"			4. Invertir digitos de un numero"<<endl;
+	cout<<"			5. Determinar si un numero es primo"<<endl;
+	cout<<"			6. Mostrar digitos impares de un numero"<<endl;
+	cout<<"			7. Determinar si los digitos de un numero estar ordenados asc. de izq a der."<<endl;
+	cout<<"			8.Concatenar 2 numeros"<<endl;
+	cout<<"			0. SALIR"<<endl;
+	cout<<endl;
+	cout<<endl;
+	cout<<"Introduzca la opcion deseada"<<endl;
+	cin>>op;
+	switch(op)
+	{
+	case 1:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			r= numdig(a);
+			cout<<"su numero de digitos son:"<<r<<endl;
+			getch();
+			system("cls");			//limpia la pantalla
+			break;
+		}
+	case 2:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			r= numimpar(a);
+			cout<<"su cantidad de digitos impares son:"<<r<<endl;
+			getch();
+			system("cls");
+			break;
+		}
+	case 3:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			r= sumdig(a);
+			cout<<"La suma de sus digitos es:"<<r<<endl;
+			getch();
+			system("cls");
+			break;
+		}
+	case 4:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			r=invertir(a);
+			cout<<"el numero invertido es: "<<r<<endl;
+			getch();
+			system("cls");
+			break;
+		}
+	case 5:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			if(primo(a)==true)
+				cout<<"el numero "<<a<<" es primo";
+			else
+				cout<<"el numero "<<a<<" no es primo";
+			getch();
+			system("cls");
+			break;
+		}
+	case 6:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			r= elimpar(a);
+			if(r==0)
+				cout<<"NO TIENE DIGITOS IMPARES"<<r<<endl;
+			else
+				cout<<"los digitos impares son: "<<r<<endl;
+			getch();
+			system("cls");
+			break;
+		}
+	case 7:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			if(verifOrden(a)==true)
+				cout<<"el numero "<<a<<" esta ordenado ascendentemente de izquierda a derecha";
+			else
+				cout<<"el numero "<<a<<" no esta ordenado ascendentemente de izquierda a derecha";
+			getch();
+			system("cls");
+			break;
+		}
+	case 8:
+		{
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> a;
+			}while(a<=0)
+			do{
+			cout<<"Introduzca un numero entero"<<endl;
+			cin>> b;
+			}while(b<=0)
+			r=concatenar(a, b);
+			cout<<"el nuevo numero es: "<<r<<endl;
+			getch();
+			system("cls");
+			break;
+		}
+
+	case 0:
+		{
+			cout<<"SALIENDO...";
+			break;
+		}
+	default:
+		{
+			cout<<"¡OPCION INCORRECTA!";
+			getch();
+			system("cls");
+			break;
+		}
+	}
+	}while(op!=0);
+	getch();
+}
+int numdig(int x)
+{
+	int i=0;
+	while(x>0)
+	{
+		x=x/10;
+		i=i+1;
+	}
+	return(i);
+}
+int numimpar(int x)
+{
+	int d, i=0;
+	while (x>0)
+	{
+		d=x%10;
+		x=x/10;
+		d=d%2;
+		if(d!=0)
+		{
+			i=i+1;
+		}
+	}
+	return(i);
+}
+int sumdig(int x)
+{
+	int i, s=0;
+	while(x>0)
+	{
+		i=x%10;
+		s=s+i;
+		x=x/10;
+	}
+	return (s);
+}
+int invertir(int x)
+{
+	int d, s=0, l, m=1;
+	l=numdig(x);
+	while(l>1)
+	{
+		m=m*10;
+		l=l-1;
+	}
+	while(x>0)
+	{
+		d=x%10;
+		s=s+d*m;
+		m=m/10;
+		x=x/10;
+	}
+	return (s);
+}
+bool primo(int x)
+{
+	int d, i=1, c=0;
+	bool k=true;			//bool sirve para true y false
+	while (i<x)
+	{
+		d=x%i;
+		if(d==0)
+			c=c+1;
+		i=i+1;
+	}
+	if(c>=2)
+		k=false;
+	return (k);
+}
+int elimpar(int x)
+{
+	int l=1, s=0, d;
+	while(x>0)
+	{
+		d=x%10;
+		if(d%2!=0)
+		{
+			s=s+(d*l);
+			l=l*10;
+		}
+		x=x/10;
+	}
+	return (s);
+}
+bool verifOrden(int x)
+{
+	bool k=true;
+	int d, d1;
+	while(x>0)
+	{
+		d=x%10;
+		x=x/10;
+		d1=x%10;
+		if(d<d1)
+			k=false;
+	}
+	return (k);
+}
+int concatenar(int x, int y)
+{
+	int s=0, d, l=1;
+	while(x>0)
+	{
+		while(y>0)
+		{
+			d=y%10;
+			s=s+d*l;
+			l=l*10;
+			y=y/10;
+		}
+		s=s+x*l;
+		x=0;
+	}
+	return (s);
+}
+
