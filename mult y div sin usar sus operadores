@@ -1,0 +1,38 @@
+#include <iostream>
+#include <conio.h>
+using namespace std;
+int multiplicar(int x, int y);
+int dividir(int x, int y);
+void main()
+{
+	int a, b, m, d;
+	cout<<"Introduzca un numero entero, sera usado como dividendo"<<endl;
+	cin>> a;
+	cout<<"Introduzca un numero entero, sera usado como divisor"<<endl;
+	cin>>b;
+	m=multiplicar(a, b);
+	d=dividir(a, b);
+	cout<<"su division es: "<<d<<endl;
+	cout<<"y su multiplicacion es: "<<m<<endl;
+	getch();
+}
+int multiplicar(int x, int y)
+{
+	int s=0, i=1;
+	while(i<=y)
+	{
+		s=s+x;
+		i=i+1;
+	}
+	return (s);
+}
+int dividir(int x, int y)
+{
+	int c=0, s=0;
+	while(s<x)
+	{
+		s=s+y;
+		c=c+1;
+	}
+	return(c);
+}
