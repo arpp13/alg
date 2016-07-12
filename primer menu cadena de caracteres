@@ -1,0 +1,121 @@
+include <iostream>
+#include <conio.h>
+#include "stdlib.h"
+#include <string.h>
+#define MAX 100
+
+using namespace std;
+
+int NumVocal(char cad[]);
+void ElimVocal(char cad[]);
+void CadenMedio(char cad[], int ancho);
+void piramide(int a);
+
+void main()
+{
+	char cadena[MAX];
+	int op, nv;
+	cout<<"introduzca el texto"<<endl;
+	do{
+		gets(cadena);
+	}while(strlen(cadena)==0);
+	do{
+
+		cout<<"			----------MENU----------"<<endl;
+		cout<<"			1. Numero de vocales"<<endl;
+		cout<<"			2. Eliminar vocales"<<endl;
+		cout<<"			3. Centrar cadena"<<endl;
+		cout<<"			4. piramide de asteriscos"<<endl;
+		cout<<"			0. SALIR"<<endl;
+		cout<<"			Introduzca una opcion"<<endl;
+		cin>>op;
+		switch(op)
+		{
+		case 1:
+			nv=NumVocal(cadena);
+			cout<<"el numero de vocales en el texto es: "<<nv;
+			getch();
+			system("cls");
+			break;
+		case 2:
+			ElimVocal(cadena);
+			puts(cadena);
+			getch();
+			system("cls");
+			break;
+		case 3:
+			cout<<"introduzca un ancho"<<endl;
+			cin>>nv;
+			CadenMedio(cadena, nv);
+			puts(cadena);
+			getch();
+			system("cls");
+			break;
+		case 4:
+			cout<<"introduzca un ancho"<<endl;
+			cin>>nv;
+			piramide(nv);
+			getch();
+			system("cls");
+			break;
+		case 0:
+			cout<<"SALIR";
+			getch();
+			system("cls");
+			break;
+		default:
+			cout<<"opcion incorrecta";
+			break;
+		}
+	}while(op!=0);
+}
+int NumVocal(char cad[])
+{
+	int i, tot=0;
+	for(i=0; i<(strlen(cad));i++)
+	{
+		if(cad[i]=='A' || cad[i]=='a' || cad[i]=='E' || cad[i]=='e' || cad[i]=='I' || cad[i]=='i' || cad[i]=='O' || cad[i]=='o' || cad[i]=='U' || cad[i]=='u')
+			tot=tot+1;
+	}
+	return(tot);
+}
+void ElimVocal(char cad[])
+{
+	int i, j;
+	int n=strlen(cad);
+	for(i=0; i<(strlen(cad)); i++)
+	{
+		if(cad[i]=='A' || cad[i]=='a' || cad[i]=='E' || cad[i]=='e' || cad[i]=='I' || cad[i]=='i' || cad[i]=='O' || cad[i]=='o' || cad[i]=='U' || cad[i]=='u')
+		{
+			for(j=i; j<(strlen(cad)-1); j++)
+			{
+				cad[j]=cad[j+1];
+			}
+			i--; //para revisar que no esten juntas las vocales
+			n--; // para que el tamaño de la cadena disminuya de acuerdo a lo que se borra
+		}
+	}
+	cad[n]= '\0';
+}
+void CadenMedio(char cad[], int ancho)
+{
+	int i, der, izq, dif, n=strlen(cad);
+	char dere[MAX], izqui[MAX], centr[MAX];
+	dif=ancho-n;
+	der=dif/2;
+	izq=dif-der;
+	for(i=0; i<der; i++)
+	{
+		dere[i]='*';
+	}
+	dere[i]='\0';
+	for(i=0; i<izq; i++)
+	{
+		izqui[i]='*';
+	}
+	izqui[i]='\0';
+	strcpy(centr, dere);  //usa una cadena auxiliar para almacenar la cadena de la derecha
+	strcat(centr, cad);   // concatena la cadena auxiliar con la cadena original
+	strcat(centr, izqui); // concatena la cadena auxiliar(der, cadena original)con la cadena de la izquierda
+	strcpy(cad, centr);   // copia la cadena auxiliar en la cadena original para que ese valor se devuelva al main
+}
