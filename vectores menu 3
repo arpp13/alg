@@ -1,0 +1,269 @@
+#include <iostream>
+#include <conio.h>
+#include "stdlib.h"
+#include "math.h"
+#define MAX 100
+
+
+using namespace std;
+void mostrar(int a[], int tam);
+void cargar(int a[], int tam);
+void ordenar_ascendente(int a[], int tam);
+bool primo(int x);
+void ordenar_primos(int a[], int tam);
+int numdig(int x);
+void cargaNumDig(int a[], int b[], int tam);
+void eliminamayor(int a[], int &tam);
+void elimprimo(int a[], int &tam);
+bool existencia(int a[], int tam, int el);
+
+void main()
+{
+	int n, A[MAX], B[MAX], op, elem;
+	do{
+		cout<<"			----------MENU----------"<<endl;
+		cout<<"			1. CARGAR VECTOR"<<endl;
+		cout<<"			2. MOSTRAR VECTOR"<<endl;
+		cout<<"			3. ORDENAR VECTOR"<<endl;
+		cout<<"			4. ORDENAR PRIMOS VECTOR"<<endl;
+		cout<<"			5. CARGAR NUMERMO DE DIGITOS AL VECTOR"<<endl;
+		cout<<"			6. ELIMINA EL MAYOR ELEMENTO DEL VECTOR"<<endl;
+		cout<<"			7. ELIMINA ELEMENTO PRIMO DEL VECTOR"<<endl;
+		cout<<"			8. VERIFICA EXISTENCIA DE UN ELEMENTO"<<endl;
+		cout<<"			0. SALIR"<<endl;
+		cout<<"Introduzca una opcion"<<endl;
+		cin>>op;
+		switch(op)
+		{
+		case 1:
+			{
+				do{
+					cout<<"Introduzca numero de elementos del arreglo"<<endl;
+					cin>>n;
+					system("cls");
+				}while(n<=0 || n>MAX);
+				cargar(A, n);
+				system("cls");
+				break;
+			}
+		case 2:
+			{
+				mostrar(A, n);
+				getch();
+				system("cls");
+				break;
+			}
+		case 3:
+			{
+				ordenar_ascendente(A, n);
+				getch();
+				system("cls");
+				break;
+			}
+		case 4:
+			{
+				ordenar_primos(A, n);
+				getch();
+				system("cls");
+				break;
+			}
+		case 5:
+			{
+				cargaNumDig(A, B, n);
+				getch();
+				system("cls");
+				break;
+			}
+		case 6:
+			{
+				eliminamayor(A, n);
+				getch();
+				system("cls");
+				break;
+			}
+		case 7:
+			{
+				elimprimo(A, n);
+				getch();
+				system("cls");
+				break;
+			}
+		case 8:
+			{
+				cout<<"introduzca el elemento q quiere verificar"<<endl;
+				cin>>elem;
+				if(existencia(A, n, elem)==false)
+					cout<<"el elemento "<<elem<<" no es parte del arreglo";
+				else
+					cout<<"el elemento "<<elem<<" esta en el arreglo";
+				getch();
+				system("cls");
+				break;
+			}
+		case 0:
+			{
+				cout<<"Saliendo...";
+				getch();
+				system("cls");
+				break;
+			}
+		default:
+			cout<<"Opcion incorrecta";
+			getch();
+			system("cls");
+			break;
+		}
+	}while(op!=0);
+}
+
+void mostrar(int a[], int tam)
+{
+	int i;
+	for(i=0; i<tam; i++)
+	{
+		cout<<"["<<i<<"]: "<<a[i]<<endl;
+	}
+}
+void cargar(int a[], int tam)
+{
+	int i;
+	cout<<"Ijntroduzca datos alvector"<<endl;
+	for(i=0; i<tam; i++)
+	{
+		cout<<"["<<i<<"]: ";
+		cin>>a[i];
+		cout<<endl;
+	}
+}
+void ordenar_ascendente(int a[], int tam)
+{
+	int i, aux, j;
+	for(i=0; i<(tam-1); i++)
+	{
+		for(j=i; j<tam; j++)
+		{
+
+			if(a[i]>a[j])
+			{
+			aux=a[i];
+			a[i]=a[j];
+			a[j]=aux;
+			}
+		}
+	}
+}
+bool primo(int x)
+{
+	int i=1, c=0;
+	bool k=true;
+	if(x==0)
+	{
+		i=x;
+		k=false;
+	}
+	while (i<x)
+	{
+		if(x%i==0)
+			c=c+1;
+		i=i+1;
+	}
+	if(c>=2)
+		k=false;
+	return (k);
+}
+void ordenar_primos(int a[], int tam)
+{
+	int i, AUX[MAX];
+	int j=0;
+	for(i=0; i<tam; i++)
+	{
+		if(primo(a[i])==true)
+		{
+			AUX[j]=a[i];
+			j++;
+		}
+	}
+	ordenar_ascendente(AUX, j);
+	j=0;
+	for(i=0; i<tam; i++)
+	{
+		if(primo(a[i])==true)
+		{
+			a[i]=AUX[j];
+			j++;
+		}
+	}
+}
+int numdig(int x)
+{
+	int i=0;
+	while(x>0)
+	{
+		x=x/10;
+		i=i+1;
+	}
+	return(i);
+}
+void cargaNumDig(int a[], int b[], int tam)
+{
+	int i;
+	for(i=0; i<tam; i++)
+	{
+		b[i]=numdig(a[i]);
+	}
+	mostrar(b, tam);
+}
+void eliminamayor(int a[], int &tam)
+{
+	int i, mayor, cont=1;
+	mayor=a[0];
+	for(i=1; i<tam; i++)
+	{
+		if(a[i]>mayor)
+		{
+			mayor=a[i];
+		}
+	}
+	cout<<mayor;
+	for(i=0; i<=tam; i++)
+	{
+		if(a[i]==mayor)
+		{
+			for(cont=i; cont<tam-1; cont++)
+			{
+				a[cont]= a[cont+1];
+			}
+			tam--;
+			i--;
+		}
+	}
+}
+void elimprimo(int a[], int &tam)
+{
+	int i, j;
+	for(i=0; i<tam; i++)
+	{
+		if(primo(a[i])==true)
+		{
+			for(j=i; j<tam-1; j++)
+			{
+				a[j]=a[j+1];
+			}
+			tam--;
+			i--;
+		}
+	}
+}
+bool existencia(int a[], int tam, int el)
+{
+	int i;
+	bool k=false;
+	for(i=0; i<tam; i++)
+	{
+		if(el==a[i])
+		{
+			k=true;
+		}
+	}
+	return(k);
+}
