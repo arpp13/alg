@@ -1,0 +1,63 @@
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#include <stdlib.h>
+#define M 100
+using namespace std;
+
+struct vecDvec{
+	int a[M];
+};
+void cargar(vecDvec A[], int tam);
+void mostrar(vecDvec A[], int tam);
+int mayor(vecDvec A[], int tam);
+void main()
+{
+	vecDvec P[M];
+	int n, mayore;
+	cout<<"n de elementos"<<endl;
+	cin>>n;
+	cargar(P, n);
+	mostrar(P, n);
+	mayore=mayor(P, n);
+	cout<<mayore;
+	getch();
+}
+void cargar(vecDvec A[], int tam)
+{
+	cout<<"introducir datos al vector"<<endl;
+	for(int i=0; i<tam; i++)
+	{
+		for(int j=0; j<tam; j++)
+		{
+			cin>>A[i].a[j];
+		}
+	}
+}
+void mostrar(vecDvec A[], int tam)
+{
+	for(int i=0; i<tam; i++)
+	{
+		cout<<"["<<i<<"]:  ";
+		for(int j=0; j<tam; j++)
+		{
+			cout<<A[i].a[j]<<"		";
+		}
+		cout<<endl;
+	}
+}
+int mayor(vecDvec A[], int tam)
+{
+	int mayor=A[0].a[0];
+	for(int i=0; i<tam; i++)
+	{
+		for(int j=0; j<tam; j++)
+		{
+			if(A[i].a[j]>mayor)
+			{
+				mayor=A[i].a[j];
+			}
+		}
+	}
+	return (mayor);
+}
