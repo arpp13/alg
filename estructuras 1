@@ -1,0 +1,129 @@
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#include <stdlib.h>
+using namespace std;
+
+struct regAmigo{
+	char nombre[30];
+	int edad;
+	char sexo;
+};
+void listaAmigos(regAmigo x[], int t);
+void mostrarLista(regAmigo x[], int t);
+void mostrarLista_MAYOR(regAmigo x[], int t);
+void orden_edad(regAmigo a[], int t);
+void elimMayor(regAmigo a[], int &tam);
+
+void main()
+{
+	regAmigo a[25];
+	char op;
+	int n;
+	cout<<"iontroduzca el numero de amigos"<<endl;
+	cin>>n;
+	listaAmigos(a, n);
+	mostrarLista(a, n);
+	system("cls");
+	mostrarLista_MAYOR(a, n);
+	system("cls");
+	orden_edad(a, n);
+	mostrarLista(a, n);
+	system("cls");
+	elimMayor(a, n);
+	mostrarLista(a, n);
+	getch();
+}
+void listaAmigos(regAmigo x[], int t)
+{
+	int i;
+	for(i=0; i<t; i++)
+	{
+		cout<<"introduzca el nombre de su amigo"<<endl;
+		do{
+			gets(x[i].nombre);
+		}while(strlen(x[i].nombre)==0);
+		cout<<"introduzca su edad"<<endl;
+		cin>>x[i].edad;
+		cout<<"introduzca su sexo: "<<endl;
+		cin>>x[i].sexo;
+	}
+}
+void mostrarLista(regAmigo x[], int t)
+{
+	int i;
+	for(i=0; i<t; i++)
+	{
+		puts(x[i].nombre);
+		cout<<x[i].edad<<endl;
+		cout<<x[i].sexo<<endl;
+		cout<<"---------------------------------"<<endl;
+	}
+	getch();
+}
+void mostrarLista_MAYOR(regAmigo x[], int t)
+{
+	int i, mayor=x[0].edad;
+	for(i=0; i<t; i++)
+	{
+		if(x[i].edad>mayor)
+			mayor=x[i].edad;
+	}
+	for(i=0; i<t; i++)
+	{
+		if(x[i].edad==mayor)
+		{
+			cout<<(x[i].nombre)<<"		";
+			cout<<x[i].edad<<"		";
+			cout<<x[i].sexo<<"		";
+			cout<<endl<<endl;
+		}
+	}
+	
+}
+void orden_edad(regAmigo a[], int t)
+{
+	int j, i, aux;
+	char auxN[30], auxS;			//se podria declara aux de tipo regAmigo y no habria necesidad de declararlo como int o como char y se usa normalmente.
+	for(i=0; i<t; i++)
+	{
+		for(j=i; j<t; j++)
+		{
+			if(a[i].edad>a[j].edad)
+			{
+				aux=a[i].edad;
+				auxS=a[i].sexo;
+				strcpy(auxN, a[i].nombre);
+				a[i].edad=a[j].edad;
+				a[i].sexo=a[j].sexo;
+				strcpy(a[i].nombre, a[j].nombre);
+				a[j].edad=aux;
+				a[j].sexo=auxS;
+				strcpy(a[j].nombre, auxN);
+			}
+		}
+	}
+}
+
+void elimMayor(regAmigo a[], int &tam)
+{
+	int i, j, mayor=a[0].edad;
+	char auxN[30], auxS;
+	for(i=1; i<tam; i++)
+	{
+		if(a[i].edad>mayor)
+			mayor=a[i].edad;
+	}
+	for(i=0; i<tam; i++)
+	{
+		if(a[i].edad==mayor)
+		{
+			for(j=i; j<(tam-1); j++)
+			{
+				a[j]=a[j+1];
+			}
+			tam--;
+			i--;
+		}
+	}
+}
