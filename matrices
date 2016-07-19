@@ -1,0 +1,91 @@
+#include <iostream>
+#include <conio.h>
+#define N 10
+#define M 10
+using namespace std;
+void cargar(int m[N][M], int x, int y);
+void mostrar(int m[N][M], int x, int y);
+void elimFprimo(int m[M][N], int &x, int y);
+
+void main()
+{
+	int Mat[N][M], n, m;
+	cout<<"introduzca numero de filas: "<<endl;
+	cin>>n;
+	cout<<"introduzca numero de columnas: "<<endl;
+	cin>>m;
+	cargar(Mat, n, m);
+	mostrar(Mat, n ,m);
+	elimFprimo(Mat, n, m);
+	mostrar(Mat, n, m);
+	getch();
+}
+void cargar(int m[N][M], int x, int y)
+{
+	int i, j;
+	for(i=0; i<x; i++)
+	{
+		for(j=0; j<y; j++)
+		{
+			cout<<"Introduzca valor para M["<<i<<"]["<<j<<"]: "<<endl;
+			cin>>m[i][j];
+		}
+	}
+}
+void mostrar(int m[N][M], int x, int y)
+{
+	int i, j;
+	for(i=0; i<x; i++)
+	{
+		for(j=0; j<y; j++)
+		{
+			cout<<m[i][j]<<"	";
+		}
+		cout<<endl;
+	}
+	cout<<endl<<endl<<endl;
+}
+bool primo(int x)
+{
+	int d, i=1, c=0;
+	bool k=true;			
+	while (i<x)
+	{
+		d=x%i;
+		if(d==0)
+			c=c+1;
+		i=i+1;
+	}
+	if(x==0)
+		k=false;
+	if(c>=2)
+		k=false;
+	return (k);
+}
+void elimFprimo(int m[M][N], int &x, int y)
+{
+	int i, j, c=0, k;
+	for(i=0; i<x; i++)
+	{
+		for(j=0; j<y; j++)
+		{
+			if(primo(m[i][j])==true)
+			{
+				c++;
+			}
+		}
+		if(c==y)
+		{
+			for(k=i; k<x-1; k++)
+			{
+				for(j=0; j<y; j++)
+				{
+					m[k][j]=m[k+1][j];    //se suben todas las filas debajo de la eliminada
+				}
+			}
+			i--;		//por si la fila inmediatamente inferior tambien se debe eliminar
+			x--;
+		}
+		c=0;
+	}
+}
