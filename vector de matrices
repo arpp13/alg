@@ -1,0 +1,67 @@
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#define N 10
+#define M 10
+using namespace std;
+struct tMat{
+	int mat[N][M];
+};
+void cargar(tMat vec[], int tam);
+void mostrar(tMat vec[], int tam);
+void invertir(tMat vec[], int tam);
+
+void main()
+{
+	tMat V[100];
+	int n;
+	cout<<"numero de elementos"<<endl;
+	cin>>n;
+	cargar(V, n);
+	mostrar(V, n);
+	invertir(V, n);
+	cout<<endl;
+	mostrar(V, n);
+	getch();
+}
+void cargar(tMat vec[], int tam)
+{
+	int i, j, k, c=0;
+	for(i=0; i<tam; i++)			// entra al elemento del vector
+	{
+		for(j=0; j<tam; j++)		// entra a la fila de la matriz q esta dentro del elemento del vector
+		{
+			for(k=0; k<tam; k++)	// entra a la columna de la matriz que esta dentro del elemento del vector
+			{
+				vec[i].mat[j][k]=++c;
+			}
+		}
+	}
+}
+void mostrar(tMat vec[], int tam)
+{
+	int i, j, k, c=0;
+	for(i=0; i<tam; i++)			// entra al elemento del vector
+	{
+		for(j=0; j<tam; j++)		// entra a la fila de la matriz q esta dentro del elemento del vector
+		{
+			for(k=0; k<tam; k++)	// entra a la columna de la matriz que esta dentro del elemento del vector
+			{
+				cout<< vec[i].mat[j][k]<<"	";
+			}
+			cout<<endl;
+		}
+		cout<<endl;
+	}
+}
+void invertir(tMat vec[], int tam)
+{
+	int k;
+	tMat aux;
+	for(k=0; k<tam/2; k++)
+	{
+		aux = vec[k];
+		vec[k]= vec[tam-k-1];
+		vec[tam-k-1]=aux;
+	}
+}
