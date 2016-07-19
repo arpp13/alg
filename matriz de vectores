@@ -1,0 +1,76 @@
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#define N 10
+#define M 10
+using namespace std;
+struct tVec{
+	int sv[10];
+};
+void cargar_subvector(tVec m[N][M], int x, int y);
+void mostrar_subvector(tVec m[N][M], int x, int y);
+void intercalar(tVec m[N][M], int x, int y);
+void main()
+{
+	tVec Mat[N][M];
+	int n, m;
+	cout<<"introduzca numero de filas: "<<endl;
+	cin>>n;
+	m=n;
+	cargar_subvector(Mat, n, m);
+	mostrar_subvector(Mat, n, m);
+	intercalar(Mat, n, m);
+	cout<<endl<<endl;
+	mostrar_subvector(Mat, n, m);
+	getch();
+}
+void cargar_subvector(tVec m[N][M], int x, int y)
+{
+	int i, j, k, c=0;
+	for(i=0; i<x; i++)
+	{
+		for(j=0; j<y; j++)
+		{
+			for(k=0; k<x; k++)
+			{
+				m[i][j].sv[k]=++c;
+			}
+		}
+	}
+}
+void mostrar_subvector(tVec m[N][M], int x, int y)
+{
+	int i, j, k;
+	for(i=0; i<x; i++)
+	{
+		for(j=0; j<y; j++)
+		{
+			for(k=0; k<x; k++)
+			{
+				cout<<" "<<m[i][j].sv[k];
+			}
+		}
+		cout<<"	"<<endl;
+	}
+}
+
+void intercalar(tVec m[N][M], int x, int y)
+{
+	int i, j, k;
+	tVec aux;
+	for(i=0; i<x; i++)
+	{
+		for(j=0; j<y; j++)
+		{
+			for(k=0; k<x; k++)
+			{
+				if(i>j)
+				{
+					aux.sv[k]=m[i][j].sv[k];		//solo sirve con el [K] pq esta como tvector.
+					m[i][j].sv[k]=m[j][i].sv[k];
+					m[j][i].sv[k]=aux.sv[k];
+				}
+			}
+		}
+	}
+}
