@@ -1,0 +1,61 @@
+#include <iostream>
+#include <conio.h>
+using namespace std;
+struct alumno{
+	char nomalumno[30];
+	int nota;
+};
+struct carrera{
+	char nomcarrera[30];
+	int nroalumnos;
+	alumno vecalum[10];
+};
+struct facultad{
+	char nomfacultad[30];
+	int nrocarreras;
+	carrera veccarrera[10];
+};
+void cargar(facultad vec[],int n){
+	int i,j,k;
+	for(i=0;i<n;i++){
+		cout<<"nombre para la facultad : "<<i+1<<" : ";
+		cin>>vec[i].nomfacultad;
+		cout<<"cuantas carreras : ";
+		cin>>vec[i].nrocarreras;
+		for(j=0;j<vec[i].nrocarreras;j++){
+			cout<<"nombre para la carrera : "<<j+1<<" : ";
+		    cin>>vec[i].veccarrera[j].nomcarrera;
+		    cout<<"cuantos alumnos : ";
+		    cin>>vec[i].veccarrera[j].nroalumnos;
+			for(k=0;k<vec[i].veccarrera[j].nroalumnos;k++){
+					cout<<"nombre de alumno : "<<k+1<<" : ";
+		            cin>>vec[i].veccarrera[j].vecalum[k].nomalumno;
+		            cout<<"nota: ";
+		            cin>>vec[i].veccarrera[j].vecalum[k].nota;	
+			}
+		}
+	}
+}
+void mostrar(facultad vec[],int n){
+	int i,j,k;
+	cout<<"\nla universidad es ---->>:\n";
+	for(i=0;i<n;i++){
+		cout<<"\n\tfacultad : "<<i+1<<" : "<<vec[i].nomfacultad;
+		for(j=0;j<vec[i].nrocarreras;j++){
+			cout<<"\n\t\tcarrera : "<<j+1<<" : "<<vec[i].veccarrera[j].nomcarrera;
+			for(k=0;k<vec[i].veccarrera[j].nroalumnos;k++){
+					cout<<"\n\t\t\talumno : "<<k+1<<" : "<<vec[i].veccarrera[j].vecalum[k].nomalumno;
+		            cout<<"\n\t\t\tnota: "<<vec[i].veccarrera[j].vecalum[k].nota;	
+			}
+		}
+	}
+}
+void main(){
+	facultad univ[10];
+	int nrofacultad;
+	cout<<"cuantas falcutates tiene la muniversidad: ";
+	cin>>nrofacultad;
+	cargar(univ,nrofacultad);
+	mostrar(univ,nrofacultad);
+	getch();
+}
