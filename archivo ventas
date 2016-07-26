@@ -1,0 +1,278 @@
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#include <stdio.h>
+#define ARCHPROD "Productos.dat"
+#define ARCHVENT "Ventas.dat"
+#define ARCHCLIE "Cliente.dat"
+
+using namespace std;
+
+struct regProducto{
+	int IdProd;
+	char nomProd[30];
+	int precio;
+	int stock;
+};
+struct regVentas{
+	int IdVentas;
+	char fecVenta[10];
+	int cantVend;
+	int IdProd;
+	int Idclie;
+};
+struct regCliente{
+	int Idclie;
+	char nomClie[30];
+	int NIT;
+};
+
+void NF(char nombre[])
+{
+	FILE *ptr;
+	ptr=fopen(nombre,"ab");
+	fclose(ptr);
+}
+int codigoProd(int &x, char na[])
+{
+	FILE *ptr;
+	regProducto reg;
+	ptr=fopen(na, "rb");		
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(x<=reg.IdProd)
+	{
+		x++;
+		fread(&reg, sizeof(reg), 1, ptr);
+	}
+	fclose(ptr);
+	return(x);
+}
+int codigoVent(int &x, char na[])
+{
+	FILE *ptr;
+	regVentas reg;
+	ptr=fopen(na, "rb");
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(x<=reg.IdVentas)
+	{
+		x++;
+	}
+	fclose(ptr);
+	return(x);
+}
+int codigoClien(int &x, char na[])
+{
+	FILE *ptr;
+	regCliente reg;
+	ptr=fopen(na, "rb");
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(x<=reg.Idclie)
+	{
+		x++;
+	}
+	fclose(ptr);
+	return(x);
+}
+void addProducto(int &cod)
+{
+	FILE *ptr;
+	char resp;
+	regProducto reg;
+	int b=0;
+	ptr=fopen("Productos.dat","ab");
+	cod=codigoProd(cod, ARCHPROD);
+	while(b!=1)
+	{
+
+		cout<< "nombre: ";
+		do{
+			gets(reg.nomProd);
+		}while(strlen(reg.nomProd)==0);
+		reg.IdProd=++cod;
+		cout<<"precio del producto? "<<endl;
+		cin>>reg.precio;
+		cout<<"cantidad en stock: "<<endl;
+		cin>>reg.stock;
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cout<<"desea ingresar mas productos?  S/N"<<endl;
+		cin>>resp;
+		if(resp!='S' && resp!='s')
+		{
+			b=1;
+		}
+	}
+	fclose(ptr);
+}
+void addVenta(int &cod)
+{
+	FILE *ptr;
+	char resp;
+	regVentas reg;
+	int b=0;
+	cod=codigoProd(cod, ARCHVENT);
+	ptr=fopen("Ventas.dat","ab");
+	while(b!=1)
+	{
+		reg.IdVentas=++cod;
+		cout<< "fecha DD/MM/AAAA: ";
+		do{
+			gets(reg.fecVenta);
+		}while(strlen(reg.fecVenta)==0);
+		cout<<"Cantidad vendida del producto? "<<endl;
+		cin>>reg.cantVend;
+		cout<<"Codigo de producto: "<<endl;
+		cin>>reg.IdProd;
+		cout<<"Codigo de client: "<<endl;
+		cin>>reg.Idclie;
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cout<<"desea ingresar mas productos?  S/N"<<endl;
+		cin>>resp;
+		if(resp!='S' && resp!='s')
+		{
+			b=1;
+		}
+	}
+	fclose(ptr);
+}
+void addCliente(int &cod)
+{
+	FILE *ptr;
+	char resp;
+	regCliente reg;
+	int b=0;
+	cod=codigoProd(cod, ARCHCLIE);
+	ptr=fopen("Cliente.dat","ab");
+	while(b!=1)
+	{
+		reg.Idclie=++cod;
+		cout<< "nombre: ";
+		do{
+			gets(reg.nomClie);
+		}while(strlen(reg.nomClie)==0);
+		cout<<"NIT: "<<endl;
+		cin>>reg.NIT;
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cout<<"desea ingresar mas clientes?  S/N"<<endl;
+		cin>>resp;
+		if(resp!='S' && resp!='s')
+		{
+			b=1;
+		}
+	}
+	fclose(ptr);
+}
+
+void mostraProd(char nombre[])				
+{
+	FILE *ptr;
+	regProducto reg;
+	ptr=fopen(nombre,"rb");
+	if(ptr==NULL)
+	{
+		cout<<"no existe"<<endl;
+	}
+	else
+	{
+		fread(&reg, sizeof(reg), 1, ptr);
+		while(feof(ptr)==false)
+		{
+			cout<<reg.IdProd<<"	";
+			cout<<reg.nomProd<<"	";
+			cout<<reg.precio<<"	";
+			cout<<reg.stock<<"	"<<endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+	fclose(ptr);
+	getch();
+}
+void mostraVenta(char nombre[])				
+{
+	FILE *ptr;
+	regVentas reg;
+	ptr=fopen(nombre,"rb");
+	if(ptr==NULL)
+	{
+		cout<<"no existe"<<endl;
+	}
+	else
+	{
+		fread(&reg, sizeof(reg), 1, ptr);
+		while(feof(ptr)==false)
+		{
+			cout<<reg.IdVentas<<"	";
+			cout<<reg.fecVenta<<"	";
+			cout<<reg.cantVend<<"	";
+			cout<<reg.IdProd<<"	";
+			cout<<reg.Idclie<<"	"<<endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+	fclose(ptr);
+	getch();
+}
+void mostraCliente(char nombre[])				
+{
+	FILE *ptr;
+	regCliente reg;
+	ptr=fopen(nombre,"rb");
+	if(ptr==NULL)
+	{
+		cout<<"no existe"<<endl;
+	}
+	else
+	{
+		fread(&reg, sizeof(reg), 1, ptr);
+		while(feof(ptr)==false)
+		{
+			cout<<reg.Idclie<<"	";
+			cout<<reg.nomClie<<"	";
+			cout<<reg.NIT<<"	"<<endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+	fclose(ptr);
+	getch();
+}
+void main()
+{
+	int cp=10000, cv=20160000, cc=0;
+	NF(ARCHPROD);
+	NF(ARCHVENT);
+	NF(ARCHCLIE);
+	int opcion;
+	do{
+		cout<<"			MENU PRINCIPAL			"<<endl;
+		cout<<"			1. Añadir productos			"<<endl;
+		cout<<"			2. Añadir Ventas			"<<endl;
+		cout<<"			3. Añadir Cliente			"<<endl;
+		cout<<"			0. Salir			"<<endl;
+		cout<<"			digite la opcion deseada: ";
+		cin>> opcion;
+		switch(opcion)
+		{
+		case 1:
+			addProducto(cp);
+			mostraProd(ARCHPROD);
+			break;
+		case 2:
+			addVenta(cv);
+			mostraProd(ARCHVENT);
+			break;
+		case 3:
+			addCliente(cc);
+			mostraProd(ARCHCLIE);
+			break;
+		case 4:
+			mostraCliente(ARCHCLIE);
+			break;
+		case 0:
+			cout<<"SALIR";
+			break;
+		default:
+			cout<<"opcion incorrecta";
+			break;
+		}
+	}while(opcion!=0);
+	getch();
+}
