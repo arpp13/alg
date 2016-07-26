@@ -4,7 +4,7 @@
 #include <stdio.h>
 #define ARCHPROD "Productos.dat"
 #define ARCHVENT "Ventas.dat"
-#define ARCHCLIE "Cliente.dat"
+#define ARCHCLIEN "Clientes.dat"
 
 using namespace std;
 
@@ -88,7 +88,7 @@ void addProducto(int &cod)
 		do{
 			gets(reg.nomProd);
 		}while(strlen(reg.nomProd)==0);
-		reg.IdProd=++cod;
+		reg.IdProd=cod;
 		cout<<"precio del producto? "<<endl;
 		cin>>reg.precio;
 		cout<<"cantidad en stock: "<<endl;
@@ -100,6 +100,7 @@ void addProducto(int &cod)
 		{
 			b=1;
 		}
+		cod++;
 	}
 	fclose(ptr);
 }
@@ -113,7 +114,7 @@ void addVenta(int &cod)
 	ptr=fopen("Ventas.dat","ab");
 	while(b!=1)
 	{
-		reg.IdVentas=++cod;
+		reg.IdVentas=cod;
 		cout<< "fecha DD/MM/AAAA: ";
 		do{
 			gets(reg.fecVenta);
@@ -131,6 +132,7 @@ void addVenta(int &cod)
 		{
 			b=1;
 		}
+		cod++;
 	}
 	fclose(ptr);
 }
@@ -140,11 +142,12 @@ void addCliente(int &cod)
 	char resp;
 	regCliente reg;
 	int b=0;
-	cod=codigoProd(cod, ARCHCLIE);
-	ptr=fopen("Cliente.dat","ab");
+	ptr=fopen("Clientes.dat","ab");
+	cod=codigoProd(cod, ARCHCLIEN);
+
 	while(b!=1)
 	{
-		reg.Idclie=++cod;
+		reg.Idclie=cod;
 		cout<< "nombre: ";
 		do{
 			gets(reg.nomClie);
@@ -158,6 +161,7 @@ void addCliente(int &cod)
 		{
 			b=1;
 		}
+		cod++;
 	}
 	fclose(ptr);
 }
@@ -166,6 +170,7 @@ void mostraProd(char nombre[])
 {
 	FILE *ptr;
 	regProducto reg;
+	cout<<"PRODUCTOS"<<endl;
 	ptr=fopen(nombre,"rb");
 	if(ptr==NULL)
 	{
@@ -190,6 +195,7 @@ void mostraVenta(char nombre[])
 {
 	FILE *ptr;
 	regVentas reg;
+	cout<<"VENTAS"<<endl;
 	ptr=fopen(nombre,"rb");
 	if(ptr==NULL)
 	{
@@ -215,6 +221,7 @@ void mostraCliente(char nombre[])
 {
 	FILE *ptr;
 	regCliente reg;
+	cout<<"CLIENTES"<<endl;
 	ptr=fopen(nombre,"rb");
 	if(ptr==NULL)
 	{
@@ -239,7 +246,7 @@ void main()
 	int cp=10000, cv=20160000, cc=0;
 	NF(ARCHPROD);
 	NF(ARCHVENT);
-	NF(ARCHCLIE);
+	NF(ARCHCLIEN);
 	int opcion;
 	do{
 		cout<<"			MENU PRINCIPAL			"<<endl;
@@ -256,15 +263,18 @@ void main()
 			mostraProd(ARCHPROD);
 			break;
 		case 2:
+			mostraCliente(ARCHCLIEN);
 			addVenta(cv);
-			mostraProd(ARCHVENT);
+			mostraVenta(ARCHVENT);
 			break;
 		case 3:
 			addCliente(cc);
-			mostraProd(ARCHCLIE);
+			mostraCliente(ARCHCLIEN);
 			break;
 		case 4:
-			mostraCliente(ARCHCLIE);
+			mostraProd(ARCHPROD);
+			mostraCliente(ARCHCLIEN);
+			mostraVenta(ARCHVENT);
 			break;
 		case 0:
 			cout<<"SALIR";
