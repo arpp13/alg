@@ -1,0 +1,294 @@
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#include <stdio.h>
+#define ARCHJUG "jugadores.dat"
+#define ARCHEQUI "equipos.dat"
+#define ARCHPART "partidos.dat"
+
+using namespace std;
+
+struct regEquipo{
+	int IdEquipo;
+	char nomEq[30];
+};
+struct regJugador{
+	int IdJugador;
+	char nomJug[30];
+	int IdEquipo;
+	char fecNac[10];
+};
+struct regPartido{
+	int IdPartido;
+	char nomEstadio[60];
+	char fecha[10];
+	int IdEq1;
+	int IdEq2;
+	int gol1;
+	int gol2;
+};
+void NF(char nombre[])
+{
+	FILE *ptr;
+	ptr=fopen(nombre,"ab");
+	fclose(ptr);
+}
+int codigoJugador(int &x, char na[])
+{
+	FILE *ptr;
+	regJugador reg;
+	ptr=fopen(na, "rb");		
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(x<=reg.IdJugador)
+	{
+		x++;
+		fread(&reg, sizeof(reg), 1, ptr);
+	}
+	fclose(ptr);
+	return(x);
+}
+int codigoEquipo(int &x, char na[])
+{
+	FILE *ptr;
+	regEquipo reg;
+	ptr=fopen(na, "rb");
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(x<=reg.IdEquipo)
+	{
+		x++;
+	}
+	fclose(ptr);
+	return(x);
+}
+int codigoPartido(int &x, char na[])
+{
+	FILE *ptr;
+	regPartido reg;
+	ptr=fopen(na, "rb");
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(x<=reg.IdPartido)
+	{
+		x++;
+	}
+	fclose(ptr);
+	return(x);
+}
+
+
+void addEquipo(int &cod)
+{
+	FILE *ptr;
+	char resp;
+	regEquipo reg;
+	int b=0;
+	cout<<"		AGREGAR/QUITAR EQUIPOS"<<endl;
+	ptr=fopen("equipos.dat","ab");
+	cod=codigoEquipo(cod, ARCHEQUI);
+	while(b!=1)
+	{
+		cout<< "Nombre del Equipo: ";
+		do{
+			gets(reg.nomEq);
+		}while(strlen(reg.nomEq)==0);
+		reg.IdEquipo=cod;
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cout<<"desea ingresar mas productos?  S/N"<<endl;
+		cin>>resp;
+		if(resp!='S' && resp!='s')
+		{
+			b=1;
+		}
+		cod++;
+	}
+	fclose(ptr);
+}
+void addJugador(int &cod)
+{
+	FILE *ptr;
+	char resp;
+	regJugador reg;
+	int b=0;
+	cout<<"		AGREGAR/QUITAR JUGADORES"<<endl;
+	ptr=fopen("jugadores.dat","ab");
+	cod=codigoEquipo(cod, ARCHJUG);
+	while(b!=1)
+	{
+		cout<< "Nombre del Jugador: ";
+		do{
+			gets(reg.nomJug);
+		}while(strlen(reg.nomJug)==0);
+		reg.IdJugador=cod;
+		cout<<"Fechas de nacimiento(DD/MM/AAAA) : ";
+		do{
+			gets(reg.fecNac);
+		}while(strlen(reg.fecNac)==0 || reg.fecNac[6]!='2' || reg.fecNac[6]!='1'
+			|| (reg.fecNac[6]=='1' && reg.fecNac[7]=='9' && (reg.fecNac[8]!='8' || reg.fecNac[8]!='9'))
+			|| (reg.fecNac[6]=='1' && reg.fecNac[7]=='9' && reg.fecNac[8]=='9' && reg.fecNac[9]=='9')
+			|| (reg.fecNac[6]=='2' && reg.fecNac[7]!='0')
+			|| (reg.fecNac[0]!='1' || reg.fecNac[0]!='2' || reg.fecNac[0]!='3')
+			|| (reg.fecNac[0]=='3' && (reg.fecNac[1]!='0' || reg.fecNac[1]!='1'))
+			|| (reg.fecNac[3]!='0' || reg.fecNac[3]!='1')
+			|| (reg.fecNac[3]=='1' && (reg.fecNac[4]!='0' || reg.fecNac[4]!='1' || reg.fecNac[4]!='2'))
+			|| (reg.fecNac[0]=='3' && (reg.fecNac[3]=='0' && reg.fecNac[4]=='2'))
+			|| strlen(reg.fecNac)!=10);
+		cout<<"Introduzca el codigo del equipo al que pertence"<<endl;
+		cin>> reg.IdEquipo;
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cout<<"desea ingresar mas jugadores?  S/N"<<endl;
+		cin>>resp;
+		if(resp!='S' && resp!='s')
+		{
+			b=1;
+		}
+		cod++;
+	}
+	fclose(ptr);
+}
+void addPartido(int &cod)
+{
+	FILE *ptr;
+	regPartido reg;
+	char resp;
+	int b=0;
+	cout<<"				AGREGAR/QUITAR PARTIDO"<<endl;
+	ptr=fopen("partidos.dat","ab");
+	cod=codigoPartido(cod, ARCHPART);
+	while(b==0)
+	{
+		cout<<"Introduzca el nombre del estadio"<<endl;
+		do{
+			gets(reg.nomEstadio);
+		}while(strlen(reg.nomEstadio)==0);
+		cout<<"Introduzca el codigo del equipo local: ";
+		cin>>reg.IdEq1;
+		cout<<"Numero de goles anotados por el equipo local";
+		cin>>reg.gol1;
+		cout<<"Introduzca el codigo del equipo visitante: ";
+		cin>>reg.IdEq2;
+		cout<<"Numero de goles anotados por el equipo visitante";
+		cin>>reg.gol2;
+		reg.IdPartido=cod;
+		cout<<"Introduzca la fecha del partido(DD/MM/AAAA): ";
+		do{
+			gets(reg.fecha);
+		}while(strlen(reg.fecha)==0 || (reg.fecha[6]!='2') || (reg.fecha[6]=='2' && reg.fecha[7]!='0')
+			|| (reg.fecha[6]=='2' && reg.fecha[7]=='0' && (reg.fecha[8]=='3'))
+			|| (reg.fecha[6]=='2' && reg.fecha[7]=='0' && reg.fecha[8]=='2' && (reg.fecha[9]=='6' || reg.fecha[9]=='7' 
+			|| reg.fecha[9]=='8' || reg.fecha[9]=='9')));
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cout<<"Desea ingresar mas partidos?   S/N"<<endl;
+		cin>>resp;
+		if(resp!='S' && resp!='s')
+		{
+			b=1;
+		}
+		cod++;
+	}
+	fclose(ptr);
+}
+
+
+void mostraJug(char nombre[])				
+{
+	FILE *ptr;
+	regJugador reg;
+	cout<<"Jugadores"<<endl;
+	ptr=fopen(nombre,"rb");
+	if(ptr==NULL)
+	{
+		cout<<"no existe"<<endl;
+	}
+	else
+	{
+		fread(&reg, sizeof(reg), 1, ptr);
+		while(feof(ptr)==false)
+		{
+			cout<<reg.IdJugador <<"	";
+			cout<<reg.nomJug <<"	";
+			cout<<reg.fecNac <<"	";
+			cout<<reg.IdEquipo <<"	"<<endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+	fclose(ptr);
+	getch();
+}
+void mostraEquipos(char nombre[])				
+{
+	FILE *ptr;
+	regEquipo reg;
+	cout<<"EQUIPOS"<<endl;
+	ptr=fopen(nombre,"rb");
+	if(ptr==NULL)
+	{
+		cout<<"no existe"<<endl;
+	}
+	else
+	{
+		fread(&reg, sizeof(reg), 1, ptr);
+		while(feof(ptr)==false)
+		{
+			cout<<reg.IdEquipo <<"	";
+			cout<<reg.nomEq <<"	";
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+	fclose(ptr);
+	getch();
+}
+regEquipo obtenerdatoequipo(int x)
+{
+	regEquipo a;
+	FILE *ptr;
+	int b=0;
+	ptr=fopen("equipos.dat","rb");
+	fread(&a, sizeof(a), 1, ptr);
+	while(b==0 && feof(ptr)==false)
+	{
+		if(a.IdEquipo==x)
+		{
+			b=1;
+		}
+		else
+		{
+			fread(&a, sizeof(a), 1, ptr);
+		}
+	}
+	return(a);
+}
+void mostraPartidos(char nombre[])				
+{
+	FILE *ptr;
+	regPartido reg;
+	regEquipo local, visitante;
+	cout<<"PARTIDOS"<<endl;
+	ptr=fopen(nombre,"rb");
+	if(ptr==NULL)
+	{
+		cout<<"no existe"<<endl;
+	}
+	else
+	{
+		fread(&reg, sizeof(reg), 1, ptr);
+		while(feof(ptr)==false)
+		{
+			cout<<"Estadio: "<< reg.nomEstadio <<"    " << reg.fecha<<endl;
+			local=obtenerdatoequipo(reg.IdEq1);
+			visitante=obtenerdatoequipo(reg.IdEq2);
+			cout<<reg.IdEq1<<"	";
+			cout<<local.nomEq<<"  ";
+			cout<<reg.gol1;
+			cout<<" Vs ";
+			cout<<reg.gol2<<"  ";
+			cout<<visitante.nomEq<<"	";
+			cout<<reg.IdEq2;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+	fclose(ptr);
+	getch();
+}
+void main()
+{
+	getch();
+}
