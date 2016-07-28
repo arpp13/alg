@@ -3,10 +3,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define ARCHPROD "Productos.dat"
-#define ARCHVENT "Ventas.dat"
-#define ARCHCLIEN "Clientes.dat"
-#define ARCHCOMP "Compras.dat"
+#define ARCHPROD "Producto.dat"
+#define ARCHVENT "Venta.dat"
+#define ARCHCLIEN "Cliente.dat"
+#define ARCHCOMP "Compra.dat"
 
 using namespace std;
 
@@ -42,7 +42,7 @@ void actualizarStockV(int I, int numero)
 	FILE *ptr;
 	int b=0;
 	regProducto reg;
-	ptr=fopen("Productos.dat", "ab");
+	ptr=fopen("Producto.dat", "r+b");
 	fread(&reg, sizeof(reg), 1, ptr);
 	rewind(ptr);
 	while(feof(ptr)==false || b==0)
@@ -60,7 +60,7 @@ void actualizarStockC(int I, int numero)
 	FILE *ptr;
 	int b=0;
 	regProducto reg;
-	ptr=fopen("Productos.dat", "r+b");
+	ptr=fopen("Producto.dat", "r+b");
 	fread(&reg, sizeof(reg), 1, ptr);
 	rewind(ptr);
 	while(feof(ptr)==false || b==0)
@@ -79,7 +79,7 @@ bool obtenerDato(int I, int numero)
 	FILE *ptr;
 	bool k=true;
 	regProducto reg;
-	ptr=fopen("Productos.dat", "rb");
+	ptr=fopen("Producto.dat", "rb");
 	fread(&reg, sizeof(reg), 1, ptr);
 	while(feof(ptr)==false || b==0)
 	{
@@ -181,7 +181,7 @@ void addProducto(int &cod)
 	char resp;
 	regProducto reg;
 	int b=0;
-	ptr=fopen("Productos.dat","ab");
+	ptr=fopen("Producto.dat","ab");
 	cod=codigoProd(cod, ARCHPROD);
 	while(b!=1)
 	{
@@ -211,7 +211,7 @@ void addCliente(int &cod)
 	char resp;
 	regCliente reg;
 	int b=0;
-	ptr=fopen("Clientes.dat","ab");
+	ptr=fopen("Cliente.dat","ab");
 	cod=codigoClien(cod, ARCHCLIEN);
 	reg.Idclie=cod;
 	cout<< "nombre: ";
@@ -232,7 +232,7 @@ void addVenta(int &cod)
 	regTransaccion reg;
 	int b=0, cc=0;
 	cod=codigoVent(cod, ARCHVENT);
-	ptr=fopen("Ventas.dat","ab");
+	ptr=fopen("Venta.dat","ab");
 	while(b!=1)
 	{
 		reg.Id=cod;
@@ -275,7 +275,7 @@ void addCompra(int &cod)
 	regTransaccion reg;
 	int b=0;
 	cod=codigoVent(cod, ARCHVENT);
-	ptr=fopen("Compras.dat","ab");
+	ptr=fopen("Compra.dat","ab");
 	while(b!=1)
 	{
 		reg.Id=cod;
@@ -406,7 +406,7 @@ void descuento()
 {
 	FILE *ptr;
 	regCliente reg;
-	ptr=fopen(ARCHCLIEN, "ab");
+	ptr=fopen(ARCHCLIEN, "r+b");
 	fread(&reg, sizeof(reg), 1, ptr);
 	rewind(ptr);
 	while(feof(ptr)==false)
