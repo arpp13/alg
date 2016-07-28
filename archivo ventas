@@ -2,9 +2,11 @@
 #include <conio.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #define ARCHPROD "Productos.dat"
 #define ARCHVENT "Ventas.dat"
 #define ARCHCLIEN "Clientes.dat"
+#define ARCHCOMP "Compras.dat"
 
 using namespace std;
 
@@ -14,10 +16,10 @@ struct regProducto{
 	int precio;
 	int stock;
 };
-struct regVentas{
-	int IdVentas;
-	char fecVenta[10];
-	int cantVend;
+struct regTransaccion{
+	int Id;
+	char fec[10];
+	int cant;
 	int IdProd;
 	int Idclie;
 };
@@ -25,7 +27,9 @@ struct regCliente{
 	int Idclie;
 	char nomClie[30];
 	int NIT;
+	int desc;
 };
+
 
 void NF(char nombre[])
 {
@@ -33,6 +37,102 @@ void NF(char nombre[])
 	ptr=fopen(nombre,"ab");
 	fclose(ptr);
 }
+void actualizarStockV(int I, int numero)
+{
+	FILE *ptr;
+	int b=0;
+	regProducto reg;
+	ptr=fopen("Productos.dat", "ab");
+	fread(&reg, sizeof(reg), 1, ptr);
+	rewind(ptr);
+	while(feof(ptr)==false || b==0)
+	{
+		if(I==reg.IdProd)
+		{
+			reg.stock=reg.stock-numero;
+			b=1;
+			fwrite(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+}
+void actualizarStockC(int I, int numero)
+{
+	FILE *ptr;
+	int b=0;
+	regProducto reg;
+	ptr=fopen("Productos.dat", "r+b");
+	fread(&reg, sizeof(reg), 1, ptr);
+	rewind(ptr);
+	while(feof(ptr)==false || b==0)
+	{
+		if(I==reg.IdProd)
+		{
+			reg.stock=reg.stock+numero;
+			b=1;
+			fwrite(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+}
+bool obtenerDato(int I, int numero)
+{
+	int b=0;
+	FILE *ptr;
+	bool k=true;
+	regProducto reg;
+	ptr=fopen("Productos.dat", "rb");
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(feof(ptr)==false || b==0)
+	{
+		if(I==reg.IdProd)
+		{
+			if(reg.stock<numero)
+			{
+				k=false;
+			}
+		}
+		fread(&reg, sizeof(reg), 1, ptr);
+	}
+	return(k);
+}
+int obtenerPrecio(int I)
+{
+	FILE *ptr;
+	regProducto reg;
+	int pri;
+	int b=0;
+	fopen(ARCHPROD, "rb");
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(feof(ptr)==false || b==0)
+	{
+		if(reg.IdProd==I)
+		{
+			b=1;
+			pri=reg.precio;
+		}
+	}
+	return(pri);
+}
+
+int totalCompra(int I)
+{
+	FILE *ptr;
+	regTransaccion reg;
+	int s=0, a;
+	ptr=fopen(ARCHVENT, "rb");
+	fread(&reg, sizeof(reg), 1, ptr);
+	while(feof(ptr)==false)
+	{
+		a=obtenerPrecio(reg.IdProd);
+		if(reg.Idclie=I)
+		{
+			s=s+reg.cant*a;
+		}
+		fread(&reg, sizeof(reg), 1, ptr);
+	}
+	return(s);
+}
+
+
 int codigoProd(int &x, char na[])
 {
 	FILE *ptr;
@@ -50,10 +150,10 @@ int codigoProd(int &x, char na[])
 int codigoVent(int &x, char na[])
 {
 	FILE *ptr;
-	regVentas reg;
+	regTransaccion reg;
 	ptr=fopen(na, "rb");
 	fread(&reg, sizeof(reg), 1, ptr);
-	while(x<=reg.IdVentas)
+	while(x<=reg.Id)
 	{
 		x++;
 	}
@@ -73,6 +173,8 @@ int codigoClien(int &x, char na[])
 	fclose(ptr);
 	return(x);
 }
+
+
 void addProducto(int &cod)
 {
 	FILE *ptr;
@@ -91,40 +193,7 @@ void addProducto(int &cod)
 		reg.IdProd=cod;
 		cout<<"precio del producto? "<<endl;
 		cin>>reg.precio;
-		cout<<"cantidad en stock: "<<endl;
-		cin>>reg.stock;
-		fwrite(&reg, sizeof(reg), 1, ptr);
-		cout<<"desea ingresar mas productos?  S/N"<<endl;
-		cin>>resp;
-		if(resp!='S' && resp!='s')
-		{
-			b=1;
-		}
-		cod++;
-	}
-	fclose(ptr);
-}
-void addVenta(int &cod)
-{
-	FILE *ptr;
-	char resp;
-	regVentas reg;
-	int b=0;
-	cod=codigoProd(cod, ARCHVENT);
-	ptr=fopen("Ventas.dat","ab");
-	while(b!=1)
-	{
-		reg.IdVentas=cod;
-		cout<< "fecha DD/MM/AAAA: ";
-		do{
-			gets(reg.fecVenta);
-		}while(strlen(reg.fecVenta)==0);
-		cout<<"Cantidad vendida del producto? "<<endl;
-		cin>>reg.cantVend;
-		cout<<"Codigo de producto: "<<endl;
-		cin>>reg.IdProd;
-		cout<<"Codigo de client: "<<endl;
-		cin>>reg.Idclie;
+		reg.stock=0;
 		fwrite(&reg, sizeof(reg), 1, ptr);
 		cout<<"desea ingresar mas productos?  S/N"<<endl;
 		cin>>resp;
@@ -143,19 +212,53 @@ void addCliente(int &cod)
 	regCliente reg;
 	int b=0;
 	ptr=fopen("Clientes.dat","ab");
-	cod=codigoProd(cod, ARCHCLIEN);
-
+	cod=codigoClien(cod, ARCHCLIEN);
+	reg.Idclie=cod;
+	cout<< "nombre: ";
+	do{
+		gets(reg.nomClie);
+	}while(strlen(reg.nomClie)==0);
+	cout<<"NIT: "<<endl;
+	cin>>reg.NIT;
+	reg.desc=0;
+	fwrite(&reg, sizeof(reg), 1, ptr);
+	cod++;
+	fclose(ptr);
+}
+void addVenta(int &cod)
+{
+	FILE *ptr;
+	char resp;
+	regTransaccion reg;
+	int b=0, cc=0;
+	cod=codigoVent(cod, ARCHVENT);
+	ptr=fopen("Ventas.dat","ab");
 	while(b!=1)
 	{
-		reg.Idclie=cod;
-		cout<< "nombre: ";
+		reg.Id=cod;
+		cout<< "fecha DD/MM/AAAA: ";
 		do{
-			gets(reg.nomClie);
-		}while(strlen(reg.nomClie)==0);
-		cout<<"NIT: "<<endl;
-		cin>>reg.NIT;
-		fwrite(&reg, sizeof(reg), 1, ptr);
-		cout<<"desea ingresar mas clientes?  S/N"<<endl;
+			gets(reg.fec);
+		}while(strlen(reg.fec)==0);
+		cout<<"Cantidad vendida del producto? "<<endl;
+		cin>>reg.cant;
+		cout<<"Codigo de producto: "<<endl;
+		cin>>reg.IdProd;
+		cout<<endl;
+		addCliente(cc);
+
+		if(obtenerDato(reg.IdProd, reg.cant)==true)
+		{
+			actualizarStockV(reg.IdProd, reg.cant);
+			fwrite(&reg, sizeof(reg), 1, ptr);
+		}
+		else
+		{
+			cout<<"No Stock disponible"<<endl;
+			getch();
+			system("cls");
+		}
+		cout<<"desea ingresar mas ventas?  S/N"<<endl;
 		cin>>resp;
 		if(resp!='S' && resp!='s')
 		{
@@ -165,6 +268,38 @@ void addCliente(int &cod)
 	}
 	fclose(ptr);
 }
+void addCompra(int &cod)
+{
+	FILE *ptr;
+	char resp;
+	regTransaccion reg;
+	int b=0;
+	cod=codigoVent(cod, ARCHVENT);
+	ptr=fopen("Compras.dat","ab");
+	while(b!=1)
+	{
+		reg.Id=cod;
+		cout<< "fecha DD/MM/AAAA: ";
+		do{
+			gets(reg.fec);
+		}while(strlen(reg.fec)==0);
+		cout<<"Cantidad comprada del producto? "<<endl;
+		cin>>reg.cant;
+		cout<<"Codigo de producto: "<<endl;
+		cin>>reg.IdProd;
+		actualizarStockC(reg.IdProd, reg.cant);
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cout<<"desea ingresar mas ventas?  S/N"<<endl;
+		cin>>resp;
+		if(resp!='S' && resp!='s')
+		{
+			b=1;
+		}
+		cod++;
+	}
+	fclose(ptr);
+}
+
 
 void mostraProd(char nombre[])				
 {
@@ -194,7 +329,7 @@ void mostraProd(char nombre[])
 void mostraVenta(char nombre[])				
 {
 	FILE *ptr;
-	regVentas reg;
+	regTransaccion reg;
 	cout<<"VENTAS"<<endl;
 	ptr=fopen(nombre,"rb");
 	if(ptr==NULL)
@@ -206,11 +341,36 @@ void mostraVenta(char nombre[])
 		fread(&reg, sizeof(reg), 1, ptr);
 		while(feof(ptr)==false)
 		{
-			cout<<reg.IdVentas<<"	";
-			cout<<reg.fecVenta<<"	";
-			cout<<reg.cantVend<<"	";
+			cout<<reg.Id<<"	";
+			cout<<reg.fec<<"	";
+			cout<<reg.cant<<"	";
 			cout<<reg.IdProd<<"	";
 			cout<<reg.Idclie<<"	"<<endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+	}
+	fclose(ptr);
+	getch();
+}
+void mostraCompra(char nombre[])				
+{
+	FILE *ptr;
+	regTransaccion reg;
+	cout<<"COMPRAS"<<endl;
+	ptr=fopen(nombre,"rb");
+	if(ptr==NULL)
+	{
+		cout<<"no existe"<<endl;
+	}
+	else
+	{
+		fread(&reg, sizeof(reg), 1, ptr);
+		while(feof(ptr)==false)
+		{
+			cout<<reg.Id<<"	";
+			cout<<reg.fec<<"	";
+			cout<<reg.cant<<"	";
+			cout<<reg.IdProd<<"	"<<endl;
 			fread(&reg, sizeof(reg), 1, ptr);
 		}
 	}
@@ -241,18 +401,54 @@ void mostraCliente(char nombre[])
 	fclose(ptr);
 	getch();
 }
+
+void descuento()
+{
+	FILE *ptr;
+	regCliente reg;
+	ptr=fopen(ARCHCLIEN, "ab");
+	fread(&reg, sizeof(reg), 1, ptr);
+	rewind(ptr);
+	while(feof(ptr)==false)
+	{
+		if(totalCompra(reg.Idclie)<=1000)
+		{
+			reg.desc=0;
+		}
+		if(totalCompra(reg.Idclie)<=2000 && totalCompra(reg.Idclie)>1000)
+		{
+			reg.desc=10;
+		}
+		if(totalCompra(reg.Idclie)<=3000 && totalCompra(reg.Idclie)>2000)
+		{
+			reg.desc=15;
+		}
+		if(totalCompra(reg.Idclie)>3000)
+		{
+			reg.desc=20;
+		}
+		fwrite(&reg, sizeof(reg), 1, ptr);
+	}
+}
+
 void main()
 {
-	int cp=10000, cv=20160000, cc=0;
+	int cp=10000, cv=20160000, cco=999900;
 	NF(ARCHPROD);
 	NF(ARCHVENT);
 	NF(ARCHCLIEN);
+	NF(ARCHCOMP);
 	int opcion;
 	do{
 		cout<<"			MENU PRINCIPAL			"<<endl;
 		cout<<"			1. Añadir productos			"<<endl;
-		cout<<"			2. Añadir Ventas			"<<endl;
-		cout<<"			3. Añadir Cliente			"<<endl;
+		cout<<"			2. Añadir Compras			"<<endl;
+		cout<<"			3. Añadir Ventas			"<<endl;
+		cout<<"			4. Listado de productos			"<<endl;
+		cout<<"			5. Listado de Ventas			"<<endl;
+		cout<<"			6. Listado de Compras			"<<endl;
+		cout<<"			7. Calcular descuento			"<<endl;
+		cout<<"			8. Listado de clientes			"<<endl;
 		cout<<"			0. Salir			"<<endl;
 		cout<<"			digite la opcion deseada: ";
 		cin>> opcion;
@@ -263,18 +459,27 @@ void main()
 			mostraProd(ARCHPROD);
 			break;
 		case 2:
-			mostraCliente(ARCHCLIEN);
-			addVenta(cv);
-			mostraVenta(ARCHVENT);
+			mostraProd(ARCHPROD);
+			addCompra(cco);
 			break;
 		case 3:
-			addCliente(cc);
-			mostraCliente(ARCHCLIEN);
+			mostraProd(ARCHPROD);
+			addVenta(cv);
 			break;
 		case 4:
 			mostraProd(ARCHPROD);
-			mostraCliente(ARCHCLIEN);
+			break;
+		case 5:
 			mostraVenta(ARCHVENT);
+			break;
+		case 6:
+			mostraCompra(ARCHVENT);
+			break;
+		case 7:
+			descuento();
+			break;
+		case 8:
+			mostraCliente(ARCHVENT);
 			break;
 		case 0:
 			cout<<"SALIR";
